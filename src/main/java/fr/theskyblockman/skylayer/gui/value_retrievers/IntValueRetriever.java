@@ -27,7 +27,7 @@ public class IntValueRetriever implements Listener, ValueSetter<Integer> {
                 onFound.onValueRetrieved(Integer.parseInt(event.getMessage()));
                 HandlerList.unregisterAll(this);
             } catch (NumberFormatException error) {
-                currentPlayer.sendMessage(ChatColor.RED + "Veuillez rentrer un nombre valide.");
+                currentPlayer.sendMessage(ChatColor.RED + "Please enter a valid number.");
             }
             event.setCancelled(true);
         }

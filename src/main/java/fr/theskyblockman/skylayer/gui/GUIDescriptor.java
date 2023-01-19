@@ -20,9 +20,9 @@ public class GUIDescriptor implements Listener {
     public boolean destroyOnClose = true;
     public ArrayList<GUIItem> currentItems = new ArrayList<>();
     private GUIState currentState;
-    public GUIDescriptor(Player player, GUIState initialState) {
+    public GUIDescriptor(Player player, GUIState initialState, String GUIName) {
         currentState = initialState;
-        this.inv = Bukkit.createInventory(null, currentState.inventorySize, "Configuration de la partie");
+        this.inv = Bukkit.createInventory(null, currentState.inventorySize, GUIName);
         this.currentPlayer = player;
         this.openInventory(currentState);
     }
