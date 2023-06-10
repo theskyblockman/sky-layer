@@ -8,13 +8,13 @@ public class GUIState {
     public final int inventorySize;
     public final InventoryFiller filler;
 
-    GUIState(List<GUIItem> items, String guiName, int inventorySize) {
+    public GUIState(List<GUIItem> items, String guiName, int inventorySize) {
         this.items = items;
         this.guiName = guiName;
         this.inventorySize = inventorySize;
         this.filler = null;
     }
-    GUIState(List<GUIItem> items, String guiName, int inventorySize, InventoryFiller filler) {
+    public GUIState(List<GUIItem> items, String guiName, int inventorySize, InventoryFiller filler) {
         this.items = items;
         this.guiName = guiName;
         this.inventorySize = inventorySize;
