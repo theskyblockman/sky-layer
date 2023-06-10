@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 
-public class GUIItem {
+public class GUIItem implements Cloneable {
     public ItemStack item;
     public int slot;
     public ItemRunner runner;
@@ -61,5 +61,18 @@ public class GUIItem {
     public GUIItem setSlot(int newSlot) {
         this.slot = newSlot;
         return this;
+    }
+
+    @Override
+    public GUIItem clone() {
+        try {
+            GUIItem clone = (GUIItem) super.clone();
+
+            clone.item = item.clone();
+
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
