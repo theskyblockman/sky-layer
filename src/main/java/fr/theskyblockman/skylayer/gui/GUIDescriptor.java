@@ -25,6 +25,7 @@ public class GUIDescriptor implements Listener {
         this.inv = Bukkit.createInventory(null, currentState.inventorySize, GUIName);
         this.currentPlayer = player;
         this.openInventory(currentState);
+        Bukkit.getServer().getPluginManager().registerEvents(this, GUILayer.moduleInitializer);
     }
     public void openInventory(@Nullable GUIState newState) {
         if(newState != null) {

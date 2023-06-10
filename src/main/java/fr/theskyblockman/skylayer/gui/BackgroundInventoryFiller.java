@@ -17,7 +17,7 @@ public class BackgroundInventoryFiller implements InventoryFiller{
 
         for (int index = 0; index < gui.inv.getSize(); index++) {
             if(!filledSlots.contains(index)) {
-                fillerSlots.add(fillerItem.setSlot(index));
+                fillerSlots.add(fillerItem.clone().setSlot(index));
             }
         }
         return fillerSlots;
