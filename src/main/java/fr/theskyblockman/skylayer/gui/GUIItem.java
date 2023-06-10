@@ -39,11 +39,12 @@ public class GUIItem {
 
     public GUIItem setColor(DyeColor color) {
         //noinspection deprecation
-        item.setDurability(color.getWoolData());
+        item.setDurability(color.getDyeData());
         return this;
     }
     public GUIItem hideFlags() {
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
         meta.addItemFlags(ItemFlag.values());
         item.setItemMeta(meta);
         return this;
@@ -54,6 +55,11 @@ public class GUIItem {
     }
     public GUIItem setRunner(EventItemRunner runner) {
         this.eventRunner = runner;
+        return this;
+    }
+
+    public GUIItem setSlot(int newSlot) {
+        this.slot = newSlot;
         return this;
     }
 }
