@@ -42,8 +42,10 @@ public class GUIDescriptor implements Listener {
         currentItems = new ArrayList<>();
         for (GUIItem item :
                 currentState.items) {
-            this.inv.setItem(item.slot, item.item);
-            currentItems.add(item);
+            if(item != null) {
+                this.inv.setItem(item.slot, item.item);
+                currentItems.add(item);
+            }
         }
         if(currentState.filler != null) {
             for (GUIItem item : currentState.filler.getItems(this)) {
