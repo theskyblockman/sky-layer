@@ -22,8 +22,6 @@ public class ScoreboardManagement implements Listener {
     public static void makeScoreboardLocal(ScoreboardComponent component) {
         currentComponent = component;
         makeScoreboardLocal();
-
-
     }
 
     public static void makeScoreboardLocal() {
@@ -32,7 +30,7 @@ public class ScoreboardManagement implements Listener {
         for(Player player : Bukkit.getOnlinePlayers()) {
             Objective currentObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-            if(Objects.equals(currentObjective.getDisplayName(), currentComponent.displayName)
+            if(currentObjective != null && Objects.equals(currentObjective.getDisplayName(), currentComponent.displayName)
                     && Objects.equals(currentObjective.getName(), player.getDisplayName())) {
                 updateObjectiveFromComponent(currentObjective, currentComponent, player);
             } else {
