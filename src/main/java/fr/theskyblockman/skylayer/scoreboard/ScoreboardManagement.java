@@ -96,11 +96,6 @@ public class ScoreboardManagement implements Listener {
     }
 
     private static void updateObjectiveFromComponent(Objective objective, ScoreboardComponent component, Player player) {
-        if(player == null) {
-            updateObjectiveFromComponent(objective, component);
-            return;
-        }
-
         for(String entry : objective.getScoreboard().getEntries()) {
             objective.getScoreboard().resetScores(entry);
         }
@@ -132,8 +127,6 @@ public class ScoreboardManagement implements Listener {
         }
     }
     private static void updateObjectiveFromComponent(Objective objective, ScoreboardComponent component) {
-        currentComponent = component;
-
         updateObjectiveFromComponent(objective, component, null);
     }
 }
