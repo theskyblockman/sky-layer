@@ -63,6 +63,8 @@ public class ScoreboardManagement implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         if(useGlobalScoreboard) {
+            updateScoreboard();
+        } else {
             registerScoreboardForPlayer(event.getPlayer());
         }
     }
