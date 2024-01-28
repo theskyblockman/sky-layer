@@ -1,9 +1,11 @@
 package fr.theskyblockman.skylayer;
 
 import fr.theskyblockman.skylayer.layer.Module;
+import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
