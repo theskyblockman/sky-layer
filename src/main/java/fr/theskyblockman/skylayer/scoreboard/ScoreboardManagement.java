@@ -21,11 +21,24 @@ public class ScoreboardManagement implements Listener {
 
     public static void makeScoreboardLocal(ScoreboardComponent component) {
         currentComponent = component;
-        makeScoreboardGlobal();
+        makeScoreboardLocal();
+
+
     }
 
     public static void makeScoreboardLocal() {
         useGlobalScoreboard = false;
+
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            Objective currentObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+
+            if(Objects.equals(currentObjective.getDisplayName(), currentComponent.displayName)
+                    && Objects.equals(currentObjective.getName(), player.getDisplayName())) {
+                updateObjectiveFromComponent(currentObjective, currentComponent, player);
+            } else {
+                registerScoreboardForPlayer(player);
+            }
+        }
     }
 
     public static void makeScoreboardGlobal(ScoreboardComponent component) {
@@ -52,6 +65,8 @@ public class ScoreboardManagement implements Listener {
     }
 
     public static void registerScoreboardForPlayer(Player player) {
+
+
         Scoreboard newScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective newObjective = newScoreboard.registerNewObjective(player.getDisplayName(), "dummy");
         newObjective.setDisplayName(currentComponent.displayName);
@@ -81,7 +96,7 @@ public class ScoreboardManagement implements Listener {
             Objective currentObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
             if(Objects.equals(currentObjective.getDisplayName(), currentComponent.displayName)
-                    && Objects.equals(currentObjective.getName(), player.getName())) {
+                    && Objects.equals(currentObjective.getName(), player.getDisplayName())) {
                 updateObjectiveFromComponent(currentObjective, currentComponent, player);
             }
         }
@@ -129,6 +144,12 @@ public class ScoreboardManagement implements Listener {
         }
     }
     private static void updateObjectiveFromComponent(Objective objective, ScoreboardComponent component) {
-        updateObjectiveFromComponent(objective, component, null);
+        if(useGlobalScoreboard) {
+            updateObjectiveFromComponent(objective, component, null);
+        } else {
+            for(Player player : Bukkit.getOnlinePlayers()) {
+                updateObjectiveFromComponent(objective, component, player);
+            }
+        }
     }
 }
