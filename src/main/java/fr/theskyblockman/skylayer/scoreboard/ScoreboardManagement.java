@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -63,8 +64,6 @@ public class ScoreboardManagement implements Listener {
     }
 
     public static void registerScoreboardForPlayer(Player player) {
-
-
         Scoreboard newScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective newObjective = newScoreboard.registerNewObjective(player.getDisplayName(), "dummy");
         newObjective.setDisplayName(currentComponent.displayName);
@@ -79,6 +78,15 @@ public class ScoreboardManagement implements Listener {
             updateScoreboard();
         } else {
             registerScoreboardForPlayer(event.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        if(useGlobalScoreboard) {
+            updateScoreboard();
+        } else {
+            event.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).unregister();
         }
     }
 
@@ -141,6 +149,7 @@ public class ScoreboardManagement implements Listener {
             currentValue--;
         }
     }
+
     private static void updateObjectiveFromComponent(Objective objective, ScoreboardComponent component) {
         if(useGlobalScoreboard) {
             updateObjectiveFromComponent(objective, component, null);
