@@ -32,7 +32,7 @@ public class ScoreboardManagement implements Listener {
             Objective currentObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
             if(currentObjective != null && Objects.equals(currentObjective.getDisplayName(), currentComponent.displayName)
-                    && Objects.equals(currentObjective.getName(), player.getDisplayName())) {
+                    && Objects.equals(currentObjective.getName(), player.getUniqueId().toString())) {
                 updateObjectiveFromComponent(currentObjective, currentComponent, player);
             } else {
                 registerScoreboardForPlayer(player);
@@ -65,7 +65,7 @@ public class ScoreboardManagement implements Listener {
 
     public static void registerScoreboardForPlayer(Player player) {
         Scoreboard newScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective newObjective = newScoreboard.registerNewObjective(player.getDisplayName(), "dummy");
+        Objective newObjective = newScoreboard.registerNewObjective(player.getUniqueId().toString(), "dummy");
         newObjective.setDisplayName(currentComponent.displayName);
         newObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
         player.setScoreboard(newScoreboard);
@@ -102,7 +102,7 @@ public class ScoreboardManagement implements Listener {
             Objective currentObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
             if(Objects.equals(currentObjective.getDisplayName(), currentComponent.displayName)
-                    && Objects.equals(currentObjective.getName(), player.getDisplayName())) {
+                    && Objects.equals(currentObjective.getName(), player.getUniqueId().toString())) {
                 updateObjectiveFromComponent(currentObjective, currentComponent, player);
             }
         }
