@@ -14,11 +14,22 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.ArrayList;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class ScoreboardManagement implements Listener {
     public ScoreboardManagement() {}
     public static boolean useGlobalScoreboard;
     private static Objective currentGlobalObjective;
     public static ScoreboardComponent currentComponent;
+    public static boolean usePlayerNamesAsIds = false;
+
+
+    private static String idForPlayer(Player player) {
+        if(usePlayerNamesAsIds) {
+            return player.getName();
+        } else {
+            return player.getUniqueId().toString();
+        }
+    }
 
     public static void makeScoreboardLocal(ScoreboardComponent component) {
         currentComponent = component;
@@ -32,7 +43,7 @@ public class ScoreboardManagement implements Listener {
             Objective currentObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
             if(currentObjective != null && Objects.equals(currentObjective.getDisplayName(), currentComponent.displayName)
-                    && Objects.equals(currentObjective.getName(), player.getUniqueId().toString())) {
+                    && Objects.equals(currentObjective.getName(), idForPlayer(player))) {
                 updateObjectiveFromComponent(currentObjective, currentComponent, player);
             } else {
                 registerScoreboardForPlayer(player);
@@ -65,7 +76,7 @@ public class ScoreboardManagement implements Listener {
 
     public static void registerScoreboardForPlayer(Player player) {
         Scoreboard newScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective newObjective = newScoreboard.registerNewObjective(player.getUniqueId().toString(), "dummy");
+        Objective newObjective = newScoreboard.registerNewObjective(idForPlayer(player), "dummy");
         newObjective.setDisplayName(currentComponent.displayName);
         newObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
         player.setScoreboard(newScoreboard);
@@ -102,7 +113,7 @@ public class ScoreboardManagement implements Listener {
             Objective currentObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
             if(Objects.equals(currentObjective.getDisplayName(), currentComponent.displayName)
-                    && Objects.equals(currentObjective.getName(), player.getUniqueId().toString())) {
+                    && Objects.equals(currentObjective.getName(), idForPlayer(player))) {
                 updateObjectiveFromComponent(currentObjective, currentComponent, player);
             }
         }

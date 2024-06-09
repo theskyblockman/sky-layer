@@ -1,0 +1,18 @@
+syntax = "proto3";
+package shared_teams;
+
+option java_multiple_files = true;
+option java_package = "fr.theskyblockman.skylayer.shared_team.local";
+option java_outer_classname = "SharedTeamProtos";
+
+message LocalSharedTeam {
+    // Can be considered as an internal name for the team
+    string name = 1;
+    map<string, bytes> members = 2;
+    bytes defaultData = 3;
+}
+
+message LocalTeamCollection {
+    double version = 1;
+    repeated LocalSharedTeam teams = 2;
+}

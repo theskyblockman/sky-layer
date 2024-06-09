@@ -14,14 +14,17 @@ public class GUIItem implements Cloneable {
     public int slot;
     public ItemRunner runner;
     public EventItemRunner eventRunner;
+
     public GUIItem(Material itemType, int slot) {
         item = new ItemStack(itemType, 1);
         this.slot = slot;
     }
+
     public GUIItem(ItemStack stack, int slot) {
         item = stack;
         this.slot = slot;
     }
+
     public GUIItem setDisplayName(String name) {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.RESET + name);
@@ -29,6 +32,7 @@ public class GUIItem implements Cloneable {
 
         return this;
     }
+
     public GUIItem setLore(String[] lore) {
         ItemMeta meta = item.getItemMeta();
         meta.setLore(Arrays.asList(lore));
@@ -49,10 +53,12 @@ public class GUIItem implements Cloneable {
         item.setItemMeta(meta);
         return this;
     }
+
     public GUIItem setRunner(ItemRunner runner) {
         this.runner = runner;
         return this;
     }
+
     public GUIItem setRunner(EventItemRunner runner) {
         this.eventRunner = runner;
         return this;
