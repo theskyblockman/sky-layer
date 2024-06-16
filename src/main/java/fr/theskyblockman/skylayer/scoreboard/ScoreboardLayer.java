@@ -1,7 +1,8 @@
 package fr.theskyblockman.skylayer.scoreboard;
 
 import fr.theskyblockman.skylayer.LayeredPlugin;
-import fr.theskyblockman.skylayer.layer.Module;
+import fr.theskyblockman.skylayer.Module;
+import fr.theskyblockman.skylayer.player_identity.PlayerIdentityOverrider;
 import org.bukkit.Bukkit;
 
 public class ScoreboardLayer extends Module {
@@ -10,6 +11,7 @@ public class ScoreboardLayer extends Module {
         return isModuleInitialised;
     }
     public static LayeredPlugin moduleInitializer;
+
     @Override
     public void onInit(LayeredPlugin plugin) {
         isModuleInitialised = true;
@@ -29,7 +31,7 @@ public class ScoreboardLayer extends Module {
             ScoreboardManagement.usePlayerNamesAsIds = true;
         }
 
-        plugin.getServer().getPluginManager().registerEvents(new ScoreboardManagement(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerIdentityOverrider(), plugin);
     }
 
     @Override

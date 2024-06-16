@@ -1,6 +1,5 @@
 package fr.theskyblockman.skylayer;
 
-import fr.theskyblockman.skylayer.layer.Module;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;

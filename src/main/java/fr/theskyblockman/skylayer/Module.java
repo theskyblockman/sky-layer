@@ -1,6 +1,4 @@
-package fr.theskyblockman.skylayer.layer;
-
-import fr.theskyblockman.skylayer.LayeredPlugin;
+package fr.theskyblockman.skylayer;
 
 public abstract class Module {
     public abstract void onInit(LayeredPlugin plugin);

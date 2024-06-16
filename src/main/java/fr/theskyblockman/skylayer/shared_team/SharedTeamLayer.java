@@ -1,7 +1,7 @@
 package fr.theskyblockman.skylayer.shared_team;
 
 import fr.theskyblockman.skylayer.LayeredPlugin;
-import fr.theskyblockman.skylayer.layer.Module;
+import fr.theskyblockman.skylayer.Module;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;

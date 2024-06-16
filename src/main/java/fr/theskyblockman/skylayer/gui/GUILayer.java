@@ -1,7 +1,7 @@
 package fr.theskyblockman.skylayer.gui;
 
 import fr.theskyblockman.skylayer.LayeredPlugin;
-import fr.theskyblockman.skylayer.layer.Module;
+import fr.theskyblockman.skylayer.Module;
 
 public class GUILayer extends Module {
     private static boolean isModuleInitialised = false;
