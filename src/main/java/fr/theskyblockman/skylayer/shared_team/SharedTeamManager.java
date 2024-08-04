@@ -38,7 +38,7 @@ public interface SharedTeamManager {
         LocalSharedTeamManager(@Nullable Path dataFile) {
             this.dataFile = dataFile;
 
-            if(dataFile == null) {
+            if (dataFile == null) {
                 return;
             }
 
@@ -47,7 +47,7 @@ public interface SharedTeamManager {
                 dataFile.getParent().toFile().mkdirs();
                 //noinspection ResultOfMethodCallIgnored
                 dataFile.toFile().createNewFile();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 logger.severe("Could not create the team data file.");
             }
 
@@ -55,33 +55,33 @@ public interface SharedTeamManager {
         }
 
         private void loadTeams() {
-            if(dataFile == null || !dataFile.toFile().exists()) {
+            if (dataFile == null || !dataFile.toFile().exists()) {
                 teamData = LocalTeamCollection.getDefaultInstance();
                 return;
             }
 
             try {
                 teamData = LocalTeamCollection.parseFrom(Files.newInputStream(dataFile));
-            } catch(IOException e) {
+            } catch (IOException e) {
                 logger.severe("Could not load the team data from file.");
             }
         }
 
         private void saveTeams() {
-            if(dataFile == null) {
+            if (dataFile == null) {
                 return;
             }
 
             try {
                 teamData.writeTo(Files.newOutputStream(dataFile));
-            } catch(IOException e) {
+            } catch (IOException e) {
                 logger.severe("Could not save the team data to file.");
             }
         }
 
         private Optional<LocalSharedTeam> getTeam(String teamName) {
             for (LocalSharedTeam team : teamData.getTeamsList()) {
-                if(team.getName().equals(teamName)) {
+                if (team.getName().equals(teamName)) {
                     return Optional.of(team);
                 }
             }
@@ -93,7 +93,7 @@ public interface SharedTeamManager {
         public String[] getTeamNamesForPlayer(String playerId) {
             List<String> teamNames = new ArrayList<>();
             for (LocalSharedTeam team : teamData.getTeamsList()) {
-                if(team.getMembersMap().containsKey(playerId)) {
+                if (team.getMembersMap().containsKey(playerId)) {
                     teamNames.add(team.getName());
                 }
             }
@@ -112,35 +112,28 @@ public interface SharedTeamManager {
 
         @Override
         public byte[] accessPlayerDataForTeam(String playerId, String teamName) throws UnknownError {
-            Optional<LocalSharedTeam> curTeam = getTeam(teamName);
-
-            if(!curTeam.isPresent()) {
-                throw new UnknownError("The team does not exist.");
-            }
+            LocalSharedTeam curTeam = getTeam(teamName).orElseThrow(() -> new UnknownError("The team does not exist."));
 
             return curTeam
-                    .get()
                     .getMembersMap()
-                    .getOrDefault(playerId, curTeam.get().getDefaultData())
+                    .getOrDefault(playerId, curTeam.getDefaultData())
                     .toByteArray();
         }
 
         @Override
         public byte @Nullable [] removePlayerFromTeam(String playerId, String teamName, boolean deletedAttachedData) throws UnknownError {
-            Optional<LocalSharedTeam> curTeam = getTeam(teamName);
+            LocalSharedTeam curTeam = getTeam(teamName).orElseThrow(() -> new UnknownError("The team does not exist."));
+            LocalSharedTeam.Builder builder = curTeam.toBuilder();
 
-            if(!curTeam.isPresent()) {
-                throw new UnknownError("The team does not exist.");
-            }
-
-            ByteString data = curTeam
-                    .get()
+            ByteString data = builder
                     .getMembersMap()
                     .remove(playerId);
 
+            teamData = teamData.toBuilder().setTeams(teamData.getTeamsList().indexOf(curTeam), builder).build();
+
             saveTeams();
 
-            if(deletedAttachedData) {
+            if (deletedAttachedData) {
                 return data.toByteArray();
             } else {
                 return null;
@@ -149,18 +142,14 @@ public interface SharedTeamManager {
 
         @Override
         public void bulkRemovePlayersFromTeam(String[] playerIds, String teamName) throws UnknownError {
-            Optional<LocalSharedTeam> curTeam = getTeam(teamName);
+            LocalSharedTeam curTeam = getTeam(teamName).orElseThrow(() -> new UnknownError("The team does not exist."));
+            LocalSharedTeam.Builder builder = curTeam.toBuilder();
 
-            if(!curTeam.isPresent()) {
-                throw new UnknownError("The team does not exist.");
+            for (String playerId : playerIds) {
+                builder.removeMembers(playerId);
             }
 
-            for(String playerId : playerIds) {
-                curTeam
-                        .get()
-                        .getMembersMap()
-                        .remove(playerId);
-            }
+            teamData = teamData.toBuilder().setTeams(teamData.getTeamsList().indexOf(curTeam), builder).build();
 
             saveTeams();
         }
@@ -168,7 +157,6 @@ public interface SharedTeamManager {
         @Override
         public void addPlayerToTeam(String playerId, String teamName, byte[] data) throws UnknownError {
             LocalSharedTeam curTeam = getTeam(teamName).orElseThrow(() -> new UnknownError("The team does not exist."));
-
             LocalSharedTeam.Builder newTeam = curTeam.toBuilder();
 
             newTeam
@@ -187,7 +175,7 @@ public interface SharedTeamManager {
 
             LocalSharedTeam.Builder newTeam = curTeam.toBuilder();
 
-            for(Map.Entry<String, byte[]> entry : playerData.entrySet()) {
+            for (Map.Entry<String, byte[]> entry : playerData.entrySet()) {
                 newTeam.putMembers(entry.getKey(), ByteString.copyFrom(entry.getValue()));
             }
 
@@ -204,7 +192,7 @@ public interface SharedTeamManager {
 
             LocalSharedTeam.Builder newTeam = curTeam.toBuilder();
 
-            for(String playerId : playerData) {
+            for (String playerId : playerData) {
                 newTeam
                         .putMembers(playerId, ByteString.EMPTY);
             }
@@ -234,14 +222,14 @@ public interface SharedTeamManager {
 
         @Override
         public void createTeam(String teamName, byte @Nullable [] defaultData) {
-            if(getTeam(teamName).isPresent()) {
+            if (getTeam(teamName).isPresent()) {
                 return;
             }
 
             LocalSharedTeam.Builder newTeam = LocalSharedTeam.newBuilder();
             newTeam.setName(teamName);
 
-            if(defaultData != null) {
+            if (defaultData != null) {
                 newTeam.setDefaultData(ByteString.copyFrom(defaultData));
             }
 
@@ -254,7 +242,7 @@ public interface SharedTeamManager {
         public void deleteTeam(String teamName) {
             Optional<LocalSharedTeam> teamToDelete = getTeam(teamName);
 
-            if(!teamToDelete.isPresent()) {
+            if (!teamToDelete.isPresent()) {
                 return;
             }
 
@@ -285,19 +273,16 @@ public interface SharedTeamManager {
      *
      * @param playerId The player's id, we recommend using {@link Player#getUniqueId()}, if this is usable.
      * @param teamName The team's name.
-     *
      * @return The player's data for the team.
-     *
      * @throws UnknownError If the team does not exist.
      */
     byte[] accessPlayerDataForTeam(String playerId, String teamName) throws UnknownError;
 
     /**
-     * @param playerId The player's id, we recommend using {@link Player#getUniqueId()}, if this is usable.
-     * @param teamName The team's name.
+     * @param playerId            The player's id, we recommend using {@link Player#getUniqueId()}, if this is usable.
+     * @param teamName            The team's name.
      * @param deletedAttachedData Should the player's data be read and given back to the caller of this method?
      *                            Returns an empty array if not or if the player was already not in the team.
-     *
      * @return The player's data for the team.
      */
     @SuppressWarnings("UnusedReturnValue")
@@ -305,8 +290,7 @@ public interface SharedTeamManager {
 
     /**
      * @param playerIds All affected player's id, we recommend using {@link Player#getUniqueId()}, if this is usable.
-     * @param teamName The team's name.
-     *
+     * @param teamName  The team's name.
      * @throws UnknownError {@code teamName} does not exist
      */
     void bulkRemovePlayersFromTeam(String[] playerIds, String teamName) throws UnknownError;
@@ -316,7 +300,6 @@ public interface SharedTeamManager {
      *
      * @param playerId The player's id, we recommend using {@link Player#getUniqueId()}, if this is usable.
      * @param teamName The team's name.
-     *
      * @throws UnknownError {@code teamName} does not exist
      */
     default void addPlayerToTeam(String playerId, String teamName) throws UnknownError {
@@ -328,8 +311,7 @@ public interface SharedTeamManager {
      *
      * @param playerId The player's id, we recommend using {@link Player#getUniqueId()}, if this is usable.
      * @param teamName The team's name.
-     * @param data The player's data for the team.
-     *
+     * @param data     The player's data for the team.
      * @throws UnknownError {@code teamName} does not exist
      */
     void addPlayerToTeam(String playerId, String teamName, byte[] data) throws UnknownError;
@@ -338,8 +320,7 @@ public interface SharedTeamManager {
      * Adds multiple players to a team with attached data.
      *
      * @param playerData All affected player's id assigned to the data for each of them, we recommend using {@link Player#getUniqueId()}, if this is usable.
-     * @param teamName The team's name.
-     *
+     * @param teamName   The team's name.
      * @throws UnknownError {@code teamName} does not exist
      */
     void bulkAddPlayersToTeamWithData(Map<String, byte[]> playerData, String teamName) throws UnknownError;
@@ -348,8 +329,7 @@ public interface SharedTeamManager {
      * Adds multiple players to a team without attaching any data to them
      *
      * @param playerData All affected player's id, we recommend using {@link Player#getUniqueId()}, if this is usable.
-     * @param teamName The team's name.
-     *
+     * @param teamName   The team's name.
      * @throws UnknownError {@code teamName} does not exist
      */
     void bulkAddPlayersToTeamWithoutData(String[] playerData, String teamName) throws UnknownError;
@@ -357,16 +337,15 @@ public interface SharedTeamManager {
     /**
      * Adds all the members of {@code teamToInclude} to {@code targetTeamName}.
      * WARNING: This method does not affect {@code teamToInclude}.
-     *          Future changes to {@code teamToInclude} will not affect {@code targetTeamName}.
+     * Future changes to {@code teamToInclude} will not affect {@code targetTeamName}.
      *
      * @param targetTeamName The name of the team.
-     * @param teamToInclude The name of the team to include in the other team.
-     *
+     * @param teamToInclude  The name of the team to include in the other team.
      * @throws UnknownError {@code teamToInclude} or {@code targetTeamName} does not exist
      */
     void includeTeamMembersInAnotherTeam(String targetTeamName, String teamToInclude);
 
-        /**
+    /**
      * Creates a new empty team
      *
      * @param teamName The team's name.
@@ -378,7 +357,7 @@ public interface SharedTeamManager {
     /**
      * Creates a new empty team
      *
-     * @param teamName The team's name.
+     * @param teamName    The team's name.
      * @param defaultData The default data to attach to the team.
      */
     void createTeam(String teamName, byte @Nullable [] defaultData);

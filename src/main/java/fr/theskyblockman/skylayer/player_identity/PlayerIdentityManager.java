@@ -14,6 +14,7 @@ public interface PlayerIdentityManager {
      * @param player The player to resolve the ID for
      * @return The ID of the player
      */
+    @SuppressWarnings("unused")
     @Nullable
     default String resolveIdForPlayer(Player player) {
         return player.getUniqueId().toString();
