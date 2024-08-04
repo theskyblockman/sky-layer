@@ -112,6 +112,8 @@ public class ScoreboardManagement implements Listener {
         } else {
             Objective currentObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
+            if(currentObjective == null) return;
+
             if(Objects.equals(currentObjective.getDisplayName(), currentComponent.displayName)
                     && Objects.equals(currentObjective.getName(), idForPlayer(player))) {
                 updateObjectiveFromComponent(currentObjective, currentComponent, player);
