@@ -127,9 +127,9 @@ public interface SharedTeamManager {
 
             ByteString data = builder
                     .getMembersMap()
-                    .remove(playerId);
+                    .get(playerId);
 
-            teamData = teamData.toBuilder().setTeams(teamData.getTeamsList().indexOf(curTeam), builder).build();
+            teamData = teamData.toBuilder().setTeams(teamData.getTeamsList().indexOf(curTeam), builder.removeMembers(playerId)).build();
 
             saveTeams();
 
