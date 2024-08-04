@@ -31,7 +31,7 @@ public class ScoreboardLayer extends Module {
             ScoreboardManagement.usePlayerNamesAsIds = true;
         }
 
-        plugin.getServer().getPluginManager().registerEvents(new PlayerIdentityOverrider(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new ScoreboardManagement(), plugin);
     }
 
     @Override

@@ -25,7 +25,7 @@ public class PlayerIdentityLayer extends Module {
 
         manager = curManager;
 
-        plugin.getServer().getPluginManager().registerEvents(new ScoreboardManagement(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerIdentityOverrider(), plugin);
     }
 
     @Override
