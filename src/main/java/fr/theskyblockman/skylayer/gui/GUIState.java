@@ -6,19 +6,19 @@ public class GUIState {
     public final List<GUIItem> items;
     public final String guiName;
     public final int inventorySize;
-    public final InventoryFiller filler;
+    public final List<InventoryFiller> fillers;
 
     public GUIState(List<GUIItem> items, String guiName, int inventorySize) {
         this.items = items;
         this.guiName = guiName;
         this.inventorySize = inventorySize;
-        this.filler = null;
+        this.fillers = null;
     }
-    public GUIState(List<GUIItem> items, String guiName, int inventorySize, InventoryFiller filler) {
+    public GUIState(List<GUIItem> items, String guiName, int inventorySize, List<InventoryFiller> fillers) {
         this.items = items;
         this.guiName = guiName;
         this.inventorySize = inventorySize;
-        this.filler = filler;
+        this.fillers = fillers;
     }
 
     GUIItem getFromSlot(int slot, GUIDescriptor gui) {
